@@ -19,7 +19,7 @@ const authenticate = (request, _response, next) => {
       return next(error);
     }
 
-    request.user = { id: payload.userId };
+    request.user = { id: payload.userId, userId: payload.userId };
     return next();
   } catch (error) {
     if (error.status) {
