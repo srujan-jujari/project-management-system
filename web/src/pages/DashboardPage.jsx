@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BrandMark from '../components/BrandMark'
 import { useAuth } from '../context/useAuth'
 
@@ -35,10 +35,14 @@ export default function DashboardPage() {
         </div>
         <nav className="sidebar-nav" aria-label="Main navigation">
           <p className="sidebar-section-label">WORKSPACE</p>
-          <span className="sidebar-link sidebar-link--active">
+          <Link className="sidebar-link sidebar-link--active" to="/dashboard">
             <span className="nav-icon nav-icon--grid" aria-hidden="true" />
             Overview
-          </span>
+          </Link>
+          <Link className="sidebar-link" to="/projects">
+            <span className="nav-icon nav-icon--projects" aria-hidden="true">▦</span>
+            Projects
+          </Link>
           <p className="sidebar-section-label sidebar-section-label--lower">YOUR SPACE</p>
           <div className="sidebar-note">
             <span className="sidebar-note-mark" aria-hidden="true">✳</span>
