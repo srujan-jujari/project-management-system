@@ -273,6 +273,11 @@ export default function ProjectsPage() {
                         <strong>{formatDate(project.endDate)}</strong>
                       </div>
                     </div>
+                    <div className="project-card-footer">
+                      <Link to={`/projects/${project.id}/tasks`} className="project-view-tasks-link">
+                        View Tasks <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
                   </article>
                 ))}
               </div>

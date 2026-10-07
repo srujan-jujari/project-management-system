@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import ProjectsPage from './pages/ProjectsPage'
 import RegisterPage from './pages/RegisterPage'
+import TasksPage from './pages/TasksPage'
 import './App.css'
 
 function HomeRedirect() {
@@ -36,6 +37,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProjectsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects/:projectId/tasks"
+        element={
+          <ProtectedRoute>
+            <TasksPage />
           </ProtectedRoute>
         }
       />

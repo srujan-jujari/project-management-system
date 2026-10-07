@@ -413,6 +413,27 @@
   font-weight: 600;
 }
 
+.project-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 11px;
+}
+
+.project-view-tasks-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6659bc;
+  font-size: 9px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.project-view-tasks-link:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
 .project-modal-backdrop {
   position: fixed;
   z-index: 10;

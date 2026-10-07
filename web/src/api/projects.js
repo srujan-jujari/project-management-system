@@ -5,6 +5,10 @@ export const projectsApi = {
     return apiRequest('/projects', { token })
   },
 
+  get(token, projectId) {
+    return apiRequest(`/projects/${projectId}`, { token })
+  },
+
   create(token, project) {
     return apiRequest('/projects', {
       method: 'POST',
