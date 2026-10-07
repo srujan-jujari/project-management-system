@@ -22,7 +22,7 @@ const authRateLimit = rateLimit({
 
 router.post('/register', authRateLimit, validate(registerSchema), authController.register);
 router.post('/login', authRateLimit, validate(loginSchema), authController.login);
-router.post('/logout', authController.logout);
+router.post('/logout', authenticate, authController.logout);
 router.get('/me', authenticate, authController.me);
 
 module.exports = router;

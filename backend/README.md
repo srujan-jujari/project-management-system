@@ -45,7 +45,7 @@ npx prisma validate
 
 - `POST /api/auth/register` — create an account from `fullName`, `email`, and `password`.
 - `POST /api/auth/login` — authenticate with `email` and `password`; returns a bearer token.
-- `POST /api/auth/logout` — returns instructions for removing the client-stored token. JWTs are stateless and are not revoked server-side.
+- `POST /api/auth/logout` — requires the bearer token and revokes it in the current server process; the client should also remove its stored token. The in-memory revocation list is not shared across replicas or server restarts.
 - `GET /api/auth/me` — return the authenticated user's profile. Send `Authorization: Bearer <token>`.
 
 Login and registration share a limit of 20 authentication requests per IP every 15 minutes. Example:

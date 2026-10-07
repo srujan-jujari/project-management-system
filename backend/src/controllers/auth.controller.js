@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const prisma = require('../utils/prisma');
 const { signAuthToken } = require('../utils/jwt');
+const { revokeToken } = require('../utils/token-revocation');
 
 const publicUserSelect = {
   id: true,
@@ -72,11 +73,14 @@ const login = async (request, response) => {
   });
 };
 
-const logout = (_request, response) =>
-  response.status(200).json({
+const logout = (request, response) => {
+  revokeToken(request.auth.token, request.auth.expiresAt);
+
+  return response.status(200).json({
     success: true,
     message: 'Logout successful. Remove the stored token from the client.',
   });
+};
 
 const me = async (request, response) => {
   const user = await prisma.user.findUnique({
