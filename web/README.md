@@ -11,8 +11,10 @@ npm install
 npm run dev
 ```
 
-The frontend expects the API at `http://localhost:3000/api`. Start the backend
-separately before signing in or registering.
+The frontend defaults to `http://localhost:3000/api`. To use a different API,
+set `VITE_API_URL` to the complete API base URL (including `/api`) in your
+frontend environment. Start the backend separately before signing in or
+registering.
 
 ## Routes
 
