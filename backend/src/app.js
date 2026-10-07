@@ -2,9 +2,9 @@ require('dotenv').config();
 
 const cors = require('cors');
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 
@@ -12,20 +12,6 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: (_request, response) => {
-      response.status(429).json({
-        success: false,
-        message: 'Too many requests, please try again later.',
-      });
-    },
-  }),
-);
 
 app.get('/api/health', (_request, response) => {
   response.status(200).json({
@@ -33,6 +19,8 @@ app.get('/api/health', (_request, response) => {
     message: 'API is running',
   });
 });
+
+app.use('/api/auth', authRoutes);
 
 app.use((_request, response) => {
   response.status(404).json({
@@ -42,11 +30,22 @@ app.use((_request, response) => {
 });
 
 app.use((error, _request, response, _next) => {
-  console.error(error);
-  response.status(error.status || 500).json({
+  const status = Number.isInteger(error.status) ? error.status : 500;
+
+  if (status >= 500) {
+    console.error('API request failed:', error.name || 'Error');
+  }
+
+  const body = {
     success: false,
-    message: error.status ? error.message : 'Internal server error',
-  });
+    message: status < 500 ? error.message : 'Internal server error',
+  };
+
+  if (status === 400 && error.details) {
+    body.errors = error.details;
+  }
+
+  response.status(status).json(body);
 });
 
 module.exports = app;

@@ -15,7 +15,7 @@ Install dependencies from this directory:
 npm install
 ```
 
-Set `DATABASE_URL` in `.env` to your PostgreSQL connection string. The checked-in `.env` contains a local development example; update its credentials and database name to match your PostgreSQL setup.
+Set `DATABASE_URL` in `.env` to your PostgreSQL connection string. Set `JWT_SECRET` to a private random value and optionally set `JWT_EXPIRES_IN` (defaults to `1h`). See `.env.example` for variable names and placeholders.
 
 ## Run
 
@@ -35,8 +35,36 @@ The API listens on port `3000` by default. Set `PORT` in `.env` to use another p
 
 ## Prisma
 
-The Prisma schema is configured for PostgreSQL and currently defines no database models. Validate the schema with:
+The Prisma schema is configured for PostgreSQL. Validate the schema with:
 
 ```bash
 npx prisma validate
+```
+
+## Authentication API
+
+- `POST /api/auth/register` — create an account from `fullName`, `email`, and `password`.
+- `POST /api/auth/login` — authenticate with `email` and `password`; returns a bearer token.
+- `POST /api/auth/logout` — returns instructions for removing the client-stored token. JWTs are stateless and are not revoked server-side.
+- `GET /api/auth/me` — return the authenticated user's profile. Send `Authorization: Bearer <token>`.
+
+Login and registration share a limit of 20 authentication requests per IP every 15 minutes. Example:
+
+```powershell
+curl.exe -X POST http://localhost:3000/api/auth/register `
+  -H "Content-Type: application/json" `
+  -d '{"fullName":"John Doe","email":"john@example.com","password":"Password123"}'
+```
+
+```powershell
+curl.exe -X POST http://localhost:3000/api/auth/login `
+  -H "Content-Type: application/json" `
+  -d '{"email":"john@example.com","password":"Password123"}'
+```
+
+Use the returned `token` for the protected profile endpoint:
+
+```powershell
+curl.exe http://localhost:3000/api/auth/me `
+  -H "Authorization: Bearer <token>"
 ```
