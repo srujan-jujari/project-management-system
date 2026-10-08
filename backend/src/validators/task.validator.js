@@ -47,4 +47,22 @@ const taskIdSchema = z
   .transform(Number)
   .refine(Number.isSafeInteger, 'ID must be a safe integer');
 
-module.exports = { createTaskSchema, updateTaskSchema, taskIdSchema };
+const createFlatTaskSchema = createTaskSchema.extend({
+  projectId: z.number().int().positive().safe(),
+});
+
+const taskListQuerySchema = z
+  .object({
+    search: z.string().trim().min(1).max(200).optional(),
+    status: taskFields.status.optional(),
+    priority: taskFields.priority.optional(),
+  })
+  .strict();
+
+module.exports = {
+  createTaskSchema,
+  createFlatTaskSchema,
+  updateTaskSchema,
+  taskIdSchema,
+  taskListQuerySchema,
+};

@@ -1,5 +1,5 @@
-const validate = (schema) => (request, _response, next) => {
-  const result = schema.safeParse(request.body);
+const validate = (schema, source = 'body', target = source) => (request, _response, next) => {
+  const result = schema.safeParse(request[source]);
 
   if (!result.success) {
     const error = new Error('Validation failed');
@@ -8,7 +8,7 @@ const validate = (schema) => (request, _response, next) => {
     return next(error);
   }
 
-  request.body = result.data;
+  request[target] = result.data;
   return next();
 };
 

@@ -21,7 +21,8 @@ const notFoundError = () => {
 };
 
 const create = async (request, response) => {
-  const project = await findOwnedProject(request.projectId, request.user.userId);
+  const projectId = request.projectId ?? request.body.projectId;
+  const project = await findOwnedProject(projectId, request.user.userId);
 
   if (!project) {
     const error = new Error('Project not found');
@@ -48,8 +49,25 @@ const listByProject = async (request, response) => {
     throw error;
   }
 
+  const { search, status, priority } = request.filters;
   const tasks = await prisma.task.findMany({
-    where: { projectId: project.id },
+    where: {
+      projectId: project.id,
+      ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
+      ...(status ? { status } : {}),
+      ...(priority ? { priority } : {}),
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return response.status(200).json({ success: true, tasks });
+};
+
+const listForUser = async (request, response) => {
+  const tasks = await prisma.task.findMany({
+    where: {
+      project: { is: { userId: request.user.userId } },
+    },
     orderBy: { createdAt: 'desc' },
   });
 
@@ -127,4 +145,4 @@ const remove = async (request, response) => {
   });
 };
 
-module.exports = { create, listByProject, getById, update, remove };
+module.exports = { create, listByProject, listForUser, getById, update, remove };

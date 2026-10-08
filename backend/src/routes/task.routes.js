@@ -3,8 +3,10 @@ const taskController = require('../controllers/task.controller');
 const authenticate = require('../middleware/auth');
 const validate = require('../middleware/validate');
 const {
+  createFlatTaskSchema,
   createTaskSchema,
   taskIdSchema,
+  taskListQuerySchema,
   updateTaskSchema,
 } = require('../validators/task.validator');
 
@@ -24,6 +26,8 @@ const validateId = (parameterName, requestProperty) => (request, _response, next
   return next();
 };
 
+router.post('/tasks', authenticate, validate(createFlatTaskSchema), taskController.create);
+router.get('/tasks', authenticate, taskController.listForUser);
 router.post(
   '/projects/:projectId/tasks',
   authenticate,
@@ -35,6 +39,7 @@ router.get(
   '/projects/:projectId/tasks',
   authenticate,
   validateId('projectId', 'projectId'),
+  validate(taskListQuerySchema, 'query', 'filters'),
   taskController.listByProject,
 );
 router.get('/tasks/:id', authenticate, validateId('id', 'taskId'), taskController.getById);

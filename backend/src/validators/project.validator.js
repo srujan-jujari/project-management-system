@@ -41,4 +41,16 @@ const projectIdSchema = z
   .transform(Number)
   .refine(Number.isSafeInteger, 'Project ID must be a safe integer');
 
-module.exports = { createProjectSchema, updateProjectSchema, projectIdSchema };
+const projectListQuerySchema = z
+  .object({
+    search: z.string().trim().min(1).max(200).optional(),
+    status: projectFields.status.optional(),
+  })
+  .strict();
+
+module.exports = {
+  createProjectSchema,
+  updateProjectSchema,
+  projectIdSchema,
+  projectListQuerySchema,
+};

@@ -5,6 +5,7 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const authRoutes = require('./routes/auth.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 const projectRoutes = require('./routes/project.routes');
 const taskRoutes = require('./routes/task.routes');
 
@@ -45,6 +46,7 @@ app.get('/api/health', (_request, response) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api', taskRoutes);
 app.use('/api/projects', projectRoutes);
 

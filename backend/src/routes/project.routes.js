@@ -5,6 +5,7 @@ const validate = require('../middleware/validate');
 const {
   createProjectSchema,
   projectIdSchema,
+  projectListQuerySchema,
   updateProjectSchema,
 } = require('../validators/project.validator');
 
@@ -26,7 +27,7 @@ const validateProjectId = (request, _response, next) => {
 
 router.use(authenticate);
 router.post('/', validate(createProjectSchema), projectController.create);
-router.get('/', projectController.list);
+router.get('/', validate(projectListQuerySchema, 'query', 'filters'), projectController.list);
 router.get('/:id', validateProjectId, projectController.getById);
 router.put('/:id', validateProjectId, validate(updateProjectSchema), projectController.update);
 router.delete('/:id', validateProjectId, projectController.remove);

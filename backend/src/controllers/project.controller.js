@@ -12,8 +12,13 @@ const create = async (request, response) => {
 };
 
 const list = async (request, response) => {
+  const { search, status } = request.filters;
   const projects = await prisma.project.findMany({
-    where: { userId: request.user.userId },
+    where: {
+      userId: request.user.userId,
+      ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
+      ...(status ? { status } : {}),
+    },
     orderBy: { createdAt: 'desc' },
   });
 
